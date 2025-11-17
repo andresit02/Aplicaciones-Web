@@ -1,0 +1,405 @@
+/* 1. PALETA DE COLORES Y FUENTES */
+:root {
+    --color-primary: #df4444e8;    /* Azul Neón Brillante (Cian) */
+    --color-secondary: #ff33cc;  /* Magenta Neón (Para LIFE/ALERTAS) */
+    --color-background: #0a0a20; /* Fondo Espacial Oscuro */
+    --color-text-light: #f0f8ff; /* Blanco Astral (Para HUD) */
+    --font-main: 'Orbitron', sans-serif; 
+}
+
+/* 2. BASE Y WRAPPER */
+body {
+    background: #000; /* Fondo negro puro fuera del contenedor del juego */
+    margin: 0;
+    overflow: hidden; 
+    -webkit-touch-callout: none !important; /* Desactiva menú contextual en iOS */
+}
+
+#wrapper {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 3. CONTENEDOR DEL JUEGO */
+#gamecontainer {
+    width: 640px;
+    height: 480px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); 
+    transform-origin: center center;
+    background-color: var(--color-background);
+    overflow: hidden; 
+    /* Borde y sombra de neón para el marco del juego */
+    border: 1px solid var(--color-primary); 
+    box-shadow: 0 0 15px rgba(175, 224, 230, 0.5); 
+}
+
+/* 4. CAPAS BASE (MENÚ, CARGA, GAME OVER) */
+.gamelayer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none; 
+    text-align: center;
+    background: rgba(10, 10, 32, 0.95); 
+    color: var(--color-text-light);
+    font-family: var(--font-main);
+    z-index: 10;
+}
+
+#gameinterfacescreen {
+    background: none; 
+}
+
+/* 5. PANTALLA DE INICIO */
+#gamestartscreen {
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/images/space_background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* CORRECCIÓN/LIMPIEZA: 'transparent' ya no es necesario */
+    background-color: transparent; 
+    position: relative; 
+    z-index: 1; 
+}
+
+/* Capa de oscurecimiento para mejorar el contraste del texto neón */
+#gamestartscreen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); 
+    z-index: -1; 
+}
+
+/* 6. TÍTULO Y BOTONES */
+
+/* Título del Juego con efecto neón y glitch sutil */
+.game-title {
+    font-family: var(--font-main); 
+    font-size: 4em; 
+    color: var(--color-primary);
+    text-shadow: 
+        0 0 10px var(--color-primary), 
+        0 0 20px rgba(0, 224, 255, 0.8), 
+        0 0 30px rgba(0, 224, 255, 0.6); 
+    margin-bottom: 50px; 
+    letter-spacing: 5px; 
+    font-weight: 700;
+    text-transform: uppercase;
+    animation: glitchEffect 2s infinite alternate; 
+}
+
+/* Keyframes para un sutil efecto glitch */
+@keyframes glitchEffect {
+    0% { transform: translate(0); opacity: 1; }
+    20% { transform: translate(-1px, 1px); opacity: 0.98; }
+    40% { transform: translate(1px, -1px); opacity: 1; }
+    60% { transform: translate(-0.5px, 0.5px); opacity: 0.99; }
+    100% { transform: translate(0); opacity: 1; }
+}
+
+/* Estilos de Botones Generales */
+button {
+    font-family: var(--font-main); 
+    font-size: 1.5em; 
+    padding: 15px 35px; 
+    margin: 25px;
+    cursor: pointer;
+    border: 3px solid var(--color-primary); 
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: var(--color-primary); 
+    border-radius: 8px; 
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    text-transform: uppercase;
+    box-shadow: 0 0 10px var(--color-primary); 
+}
+
+button:hover {
+    background-color: var(--color-primary); 
+    color: var(--color-background); 
+    box-shadow: 0 0 20px var(--color-primary), 
+                0 0 40px rgba(0, 224, 255, 0.8); 
+    transform: scale(1.08); 
+    border-color: var(--color-secondary); 
+}
+
+/* 7. PANTALLA GAME OVER */
+#gameoverscreen {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    background: rgba(10, 10, 32, 0.95); 
+    z-index: 10;
+}
+
+/* Título GAME OVER (Magenta Neón) */
+#gameoverscreen h2 {
+    font-family: var(--font-main); 
+    font-size: 5em; 
+    color: var(--color-secondary); 
+    text-shadow: 
+        0 0 10px var(--color-secondary), 
+        0 0 20px rgba(255, 51, 204, 0.8), 
+        0 0 30px rgba(255, 51, 204, 0.6);
+    margin-bottom: 20px; 
+    letter-spacing: 5px; 
+    font-weight: 700;
+    text-transform: uppercase;
+    animation: pulseNeon 1.5s infinite alternate; 
+}
+
+@keyframes pulseNeon {
+    from { opacity: 1; text-shadow: 0 0 10px var(--color-secondary); }
+    to { opacity: 0.8; text-shadow: 0 0 5px var(--color-secondary), 0 0 15px rgba(255, 51, 204, 0.5); }
+}
+
+/* Puntuación Final */
+#final-score {
+    font-family: var(--font-main);
+    font-size: 1.8em; 
+    color: var(--color-primary); 
+    text-shadow: 0 0 8px var(--color-primary);
+    margin-top: 10px; 
+    margin-bottom: 30px; 
+    text-transform: uppercase;
+}
+
+/* Contenedor para alinear los dos botones de Game Over */
+#game-over-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+/* Estilos específicos para los botones dentro de la pantalla Game Over */
+#gameoverscreen button {
+    font-size: 1.1em;
+    padding: 12px 30px;
+    border: 2px solid var(--color-primary);
+    margin: 5px; 
+}
+
+#gameoverscreen button:hover {
+     transform: scale(1.05); 
+}
+
+/* ⭐️ 7.1. SUPERPOSICIÓN DE PAUSA (Panel Centrado y Funcional) */
+.pauseoverlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    /* Estado inicial: Oculto. JS lo cambiará a 'flex' para mostrarlo */
+    display: none; 
+    
+    text-align: center;
+    /* Fondo semi-transparente para ver el juego detrás */
+    background: rgba(10, 10, 32, 0.7); 
+    color: var(--color-text-light);
+    font-family: var(--font-main);
+    z-index: 9; 
+    
+    /* Estilos de centrado que se aplican cuando JS cambia display a 'flex' */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0; 
+}
+
+/* TÍTULO "PAUSA" */
+.pauseoverlay::before {
+    position: absolute;
+    top: calc(50% - 130px); 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3em; 
+    color: var(--color-primary);
+    text-shadow: 
+        0 0 8px var(--color-primary), 
+        0 0 16px rgba(0, 224, 255, 0.6); 
+    letter-spacing: 4px; 
+    font-weight: 700;
+}
+
+/* Panel de botones de pausa (la "ventana" centrada) */
+#pause-buttons {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;
+    margin-top: 0; 
+    
+    /* Estilos de panel neón */
+    background-color: var(--color-background); 
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 0 15px var(--color-primary), 0 0 30px rgba(0, 224, 255, 0.6);
+    padding: 30px 40px;
+    border-radius: 10px;
+}
+
+/* ESTILOS DE BOTONES DE PAUSA (Más pequeños y discretos) */
+#pausescreen button {
+    font-size: 1.1em;
+    padding: 10px 25px;
+    border: 2px solid var(--color-primary);
+    margin: 0; 
+    box-shadow: 0 0 8px var(--color-primary);
+}
+
+#pausescreen button:hover {
+     transform: scale(1.05);
+     box-shadow: 0 0 15px var(--color-primary);
+}
+
+
+/* 8. HUD (Interfaz de Juego) */
+
+#hud {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    color: var(--color-text-light);
+    font-family: var(--font-main);
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    border: 1px solid var(--color-secondary);
+    z-index: 11; /* Asegura que el HUD siempre sea visible */
+}
+
+#score, #life {
+    padding: 0 5px;
+    text-shadow: 0 0 3px var(--color-primary);
+}
+
+#life {
+    color: var(--color-secondary);
+    text-shadow: 0 0 3px var(--color-secondary);
+}
+
+/* ESTILOS para Botón de Pausa/Mute */
+#mute-button, #pause-button {
+    font-size: 1.2em;
+    border: none;
+    background: none;
+    color: var(--color-text-light);
+    padding: 5px;
+    margin: 0;
+    transition: color 0.2s, transform 0.2s;
+    text-transform: none; 
+    border-radius: 0;
+    box-shadow: none;
+    font-family: var(--font-main);
+}
+
+#mute-button:hover, #pause-button:hover {
+    color: var(--color-primary);
+    background: none;
+    box-shadow: none;
+    transform: scale(1.1);
+}
+
+/* 9. PANTALLA DE CARGA */
+
+#loadingmessage {
+    font-family: var(--font-main);
+    font-size: 1.5em;
+    color: var(--color-primary);
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* ⭐️ 11. VENTANA EMERGENTE DE CONTROLES (NUEVA SECCIÓN) */
+
+/* Capa de superposición para los controles (oculta por defecto, se muestra con JS) */
+.controls-overlay {
+    background: rgba(10, 10, 32, 0.98); 
+    display: none; /* Oculto por defecto. JS lo cambia a 'flex' */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20; 
+}
+
+#controls-panel {
+    background-color: var(--color-background);
+    border: 3px solid var(--color-secondary); 
+    box-shadow: 0 0 15px var(--color-secondary), 0 0 30px rgba(255, 51, 204, 0.6);
+    padding: 30px 40px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center; /* Cambiado a centrado para bloques de texto simple */
+    color: var(--color-text-light);
+    font-family: var(--font-main);
+    animation: fadeIn 0.3s ease-out; 
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#controls-panel h3 {
+    text-align: center;
+    color: var(--color-primary);
+    text-shadow: 0 0 8px var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+#controls-panel p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin: 15px 0;
+    color: #a0a0ff; /* Azul suave para el texto */
+    text-shadow: 0 0 1px #a0a0ff;
+}
+
+/* Estilo para el botón CERRAR dentro del panel de controles */
+#controls-panel button {
+    display: block;
+    width: 100%;
+    margin: 25px 0 0 0;
+    font-size: 1em;
+    padding: 10px 20px;
+}
+
+
+/* 10. RESPONSIVIDAD */
+@media (max-width: 600px) {
+    .game-title {
+        font-size: 2.5em; 
+        letter-spacing: 3px;
+    }
+    button {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+    #hud {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}

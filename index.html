@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mi primer juego</title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" type="text/css" media="screen">
+    
+    <script src="js/Box2d.min.js"></script> 
+    
+    <script src="js/loader.js"></script>
+    <script src="js/physics.js"></script> 
+    <script src="js/game.js"></script> 
+</head>
+<body onload="game.resize(); game.init();">
+    <div id="wrapper">
+        <div id="gamecontainer">
+            
+            <div id="gamestartscreen" class="gamelayer">
+                <h1 class="game-title">SPACE WAR</h1>
+                <button onclick="game.startLoading()">Iniciar Juego</button>
+                <button onclick="game.showControls()">Controles</button>
+            </div>
+
+            <div id="controls-popup" class="gamelayer controls-overlay">
+                <div id="controls-panel">
+                    <h3>🚀 Controles de Nave 🚀</h3>
+                    <p>
+                        MOVIMIENTO:<br>
+                        Flecha Izquierda / A: Mover a la Izquierda<br>
+                        Flecha Derecha / D: Mover a la Derecha
+                    </p>
+                    <p>
+                        ACCIÓN:<br>
+                        Barra Espaciadora: Disparar
+                    </p>
+                    <button onclick="game.hideControls()">CERRAR</button>
+                </div>
+            </div>
+
+            <div id="loadingscreen" class="gamelayer">
+                <div id="loadingmessage">Cargando... 0%</div>
+            </div>
+            
+            <div id="gameinterfacescreen" class="gamelayer">
+                <canvas id="gamecanvas" width="640" height="480"></canvas>
+                
+                <div id="hud" class="gameoverlay">
+                    <span id="score">SCORE: 0</span> | <span id="life">LIFE: 100</span>
+                    
+                    <button id="pause-button" onclick="game.pauseGame()">||</button> 
+                    
+                    <button id="mute-button" onclick="game.toggleMute()">🔇</button>
+                </div>
+                
+                <div id="pausescreen" class="pauseoverlay"> 
+                    <div id="pause-buttons">
+                        <button onclick="game.pauseGame()">REANUDAR</button>
+                        <button onclick="game.goToMenu()">SALIR</button> 
+                    </div>
+                </div>
+            </div>
+            
+            <div id="gameoverscreen" class="gamelayer">
+                <h2>GAME OVER</h2>
+                <p id="final-score">Puntuación Final: 0</p>
+                
+                <div id="game-over-buttons">
+                    <button onclick="game.startGame()">REINICIAR</button>
+                    
+                    <button onclick="game.goToMenu()">SALIR</button> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
