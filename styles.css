@@ -4,7 +4,7 @@
     --color-secondary: #ff33cc;  /* Magenta Neón (Para LIFE/ALERTAS) */
     --color-background: #0a0a20; /* Fondo Espacial Oscuro */
     --color-text-light: #f0f8ff; /* Blanco Astral (Para HUD) */
-    --font-main: 'Orbitron', sans-serif; 
+    --font-main: 'Orbitron', sans-serif; /* Fuente tecnológica/futurista */
 }
 
 /* 2. BASE Y WRAPPER */
@@ -12,7 +12,8 @@ body {
     background: #000; /* Fondo negro puro fuera del contenedor del juego */
     margin: 0;
     overflow: hidden; 
-    -webkit-touch-callout: none !important; /* Desactiva menú contextual en iOS */
+    /* Desactiva la selección de texto y menú contextual en móviles */
+    -webkit-touch-callout: none !important; 
 }
 
 #wrapper {
@@ -30,6 +31,7 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
+    /* Centra el contenedor del juego en la pantalla y permite escalado */
     transform: translate(-50%, -50%); 
     transform-origin: center center;
     background-color: var(--color-background);
@@ -46,16 +48,16 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    display: none; 
+    display: none; /* Controlado por JavaScript */
     text-align: center;
-    background: rgba(10, 10, 32, 0.95); 
+    background: rgba(10, 10, 32, 0.95); /* Oscurecimiento semi-transparente */
     color: var(--color-text-light);
     font-family: var(--font-main);
     z-index: 10;
 }
 
 #gameinterfacescreen {
-    background: none; 
+    background: none; /* Solo contiene el canvas y el HUD */
 }
 
 /* 5. PANTALLA DE INICIO */
@@ -64,6 +66,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* Fondo con imagen para el menú */
     background-image: url('../assets/images/space_background.png');
     background-size: cover;
     background-position: center;
@@ -125,6 +128,7 @@ button {
     background-color: rgba(0, 0, 0, 0.5); 
     color: var(--color-primary); 
     border-radius: 8px; 
+    /* Transición suave para efectos hover */
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
     text-transform: uppercase;
     box-shadow: 0 0 10px var(--color-primary); 
@@ -132,10 +136,10 @@ button {
 
 /* Estilos de Botones Secundarios del Menú (Controles, Récords) */
 .secondary-menu-button {
-    font-size: 1.2em; /* Texto un poco más pequeño */
-    padding: 10px 25px; /* Padding interno reducido */
-    width: 300px; /* Ancho fijo para simetría */
-    margin: 15px; /* Margen vertical reducido para acercarlos */
+    font-size: 1.2em; 
+    padding: 10px 25px; 
+    width: 300px; 
+    margin: 15px; 
 }
 
 .secondary-menu-button:hover {
@@ -245,18 +249,19 @@ button:hover {
     left: 0;
     display: none; 
     text-align: center;
-    background: rgba(10, 10, 32, 0.7); 
+    background: rgba(10, 10, 32, 0.7); /* Menor opacidad para ver el juego detrás */
     color: var(--color-text-light);
     font-family: var(--font-main);
-    z-index: 9; 
+    z-index: 9; /* Menor que las pantallas de menú/gameover */
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-top: 0; 
 }
 
-/* TÍTULO "PAUSA" */
+/* TÍTULO "PAUSA" (Implementado con pseudo-elemento) */
 .pauseoverlay::before {
+    content: 'PAUSA';
     position: absolute;
     top: calc(50% - 130px); 
     left: 50%;
@@ -383,7 +388,7 @@ button:hover {
 /* Capa de superposición para los controles/récords */
 .controls-overlay {
     background: rgba(10, 10, 32, 0.98); 
-    display: none; 
+    display: none; /* Controlado por JavaScript */
     flex-direction: column;
     justify-content: center;
     align-items: center;

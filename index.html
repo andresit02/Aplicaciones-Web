@@ -2,14 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Mi primer juego</title>
+    <title>SPACE WAR</title>
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" type="text/css" media="screen">
     
     <script src="js/Box2d.min.js"></script> 
-    
     <script src="js/loader.js"></script>
     <script src="js/physics.js"></script> 
     <script src="js/game.js"></script> 
@@ -59,12 +58,10 @@
                 
                 <div id="hud" class="gameoverlay">
                     <span id="score">SCORE: 0</span> | <span id="life">LIFE: 100</span> | 
-                    
                     <span id="fps-counter">FPS: 0</span> 
                     
                     <div id="hud-buttons"> 
                         <button id="pause-button" onclick="game.pauseGame()">||</button> 
-                        
                         <button id="game-mute-button" onclick="game.toggleMute('game')">🔊</button>
                     </div>
                 </div>
@@ -83,7 +80,6 @@
                 
                 <div id="game-over-buttons">
                     <button onclick="game.startGame()">REINICIAR</button>
-                    
                     <button onclick="game.goToMenu()">SALIR</button> 
                 </div>
             </div>
