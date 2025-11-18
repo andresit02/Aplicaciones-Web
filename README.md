@@ -37,8 +37,10 @@ El proyecto "SPACE WAR" fue desarrollado siguiendo una arquitectura modular para
 
 ### ⚙️ Arquitectura Técnica y Patrones
 
-* **Modularidad del Código:** El proyecto divide responsabilidades en módulos dedicados: `game.js` (Lógica principal/Estados), `physics.js` (Integración de Box2D), y `loader.js` (Gestión de Recursos/Audio).
-* **Game Loop y Estados:** Se implementa el ciclo de juego unificado (`drawLoop` en `game.js`) y se gestionan los estados requeridos: `menu`, `loading`, `playing`, `paused`, y `gameover`.
+* **Base Visual (HTML5 Canvas):** El juego se renderiza completamente dentro del elemento `<canvas id="gamecanvas">`. Toda la lógica de dibujo (fondo, jugador, enemigos, balas) se gestiona directamente a través de la **API de Canvas 2D** en `game.js`.
+* **Carga de Recursos (Loader):** El módulo `loader.js` es responsable de la **precarga asíncrona** de todas las imágenes (`player.png`, `enemy.png`, `bullet.png`, `background.png`) y recursos de audio antes de iniciar el juego.
+* **Modularidad del Código (15% Rúbrica):** El proyecto divide responsabilidades en módulos dedicados: `game.js` (Lógica principal/Estados), `physics.js` (Integración de Box2D), y `loader.js` (Gestión de recursos/Audio).
+* **Game Loop y Estados (25% Rúbrica):** Se implementa el ciclo de juego unificado (`drawLoop` en `game.js`) y se gestionan los estados requeridos: `menu`, `loading`, `playing`, `paused`, y `gameover`.
 * **Motor de Física (Box2D):** El archivo `physics.js` inicializa el mundo **Box2D.js** para manejar todas las colisiones y el movimiento con precisión, garantizando la estabilidad del juego.
 
 ### ✅ Requisitos Cumplidos
