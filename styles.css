@@ -69,7 +69,6 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    /* CORRECCIÓN/LIMPIEZA: 'transparent' ya no es necesario */
     background-color: transparent; 
     position: relative; 
     z-index: 1; 
@@ -139,6 +138,27 @@ button:hover {
     border-color: var(--color-secondary); 
 }
 
+/* ⭐️ ESTILO ESPECÍFICO PARA EL BOTÓN DE MUTE EN EL MENÚ */
+#menu-mute-button {
+    position: absolute; /* Para que quede en la esquina */
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px; /* Más pequeño y discreto */
+    font-size: 1.2em;
+    border: 2px solid var(--color-secondary); 
+    color: var(--color-secondary); 
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 8px var(--color-secondary); 
+    margin: 0;
+}
+
+#menu-mute-button:hover {
+    box-shadow: 0 0 15px var(--color-secondary); 
+    background-color: var(--color-secondary);
+    color: var(--color-background);
+}
+
+
 /* 7. PANTALLA GAME OVER */
 #gameoverscreen {
     display: flex;
@@ -199,25 +219,19 @@ button:hover {
      transform: scale(1.05); 
 }
 
-/* ⭐️ 7.1. SUPERPOSICIÓN DE PAUSA (Panel Centrado y Funcional) */
+/* ⭐️ 7.1. SUPERPOSICIÓN DE PAUSA */
 .pauseoverlay {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    
-    /* Estado inicial: Oculto. JS lo cambiará a 'flex' para mostrarlo */
     display: none; 
-    
     text-align: center;
-    /* Fondo semi-transparente para ver el juego detrás */
     background: rgba(10, 10, 32, 0.7); 
     color: var(--color-text-light);
     font-family: var(--font-main);
     z-index: 9; 
-    
-    /* Estilos de centrado que se aplican cuando JS cambia display a 'flex' */
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -286,7 +300,7 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     border: 1px solid var(--color-secondary);
-    z-index: 11; /* Asegura que el HUD siempre sea visible */
+    z-index: 11; 
 }
 
 #score, #life {
@@ -299,27 +313,37 @@ button:hover {
     text-shadow: 0 0 3px var(--color-secondary);
 }
 
-/* ESTILOS para Botón de Pausa/Mute */
-#mute-button, #pause-button {
-    font-size: 1.2em;
-    border: none;
-    background: none;
-    color: var(--color-text-light);
-    padding: 5px;
-    margin: 0;
-    transition: color 0.2s, transform 0.2s;
-    text-transform: none; 
-    border-radius: 0;
-    box-shadow: none;
-    font-family: var(--font-main);
+/* Contenedor para alinear los botones del HUD */
+#hud-buttons {
+    display: flex;
+    gap: 10px; /* Separación entre pausa y mute */
 }
 
-#mute-button:hover, #pause-button:hover {
-    color: var(--color-primary);
-    background: none;
-    box-shadow: none;
-    transform: scale(1.1);
+/* ⭐️ ESTILOS MEJORADOS para Botón de Pausa/Mute del JUEGO */
+
+#pause-button, #game-mute-button {
+    /* ⭐️ APLICAMOS ESTILOS DE BOTÓN NEÓN MÁS FUERTES Y VISIBLES */
+    font-size: 1.1em;
+    padding: 8px 12px;
+    margin: 0;
+    cursor: pointer;
+    border: 2px solid var(--color-primary); 
+    background-color: rgba(0, 0, 0, 0.6); 
+    color: var(--color-primary); 
+    border-radius: 5px; 
+    transition: all 0.2s; 
+    text-transform: none; 
+    box-shadow: 0 0 5px var(--color-primary); 
+    line-height: 1; /* Para centrar el texto mejor */
 }
+
+#pause-button:hover, #game-mute-button:hover {
+    color: var(--color-background);
+    background-color: var(--color-primary); 
+    box-shadow: 0 0 10px var(--color-primary);
+    transform: scale(1.05);
+}
+
 
 /* 9. PANTALLA DE CARGA */
 
@@ -330,12 +354,12 @@ button:hover {
     text-shadow: 0 0 5px var(--color-primary);
 }
 
-/* ⭐️ 11. VENTANA EMERGENTE DE CONTROLES (NUEVA SECCIÓN) */
+/* ⭐️ 11. VENTANA EMERGENTE DE CONTROLES */
 
 /* Capa de superposición para los controles (oculta por defecto, se muestra con JS) */
 .controls-overlay {
     background: rgba(10, 10, 32, 0.98); 
-    display: none; /* Oculto por defecto. JS lo cambia a 'flex' */
+    display: none; 
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -350,7 +374,7 @@ button:hover {
     border-radius: 10px;
     width: 80%;
     max-width: 400px;
-    text-align: center; /* Cambiado a centrado para bloques de texto simple */
+    text-align: center; 
     color: var(--color-text-light);
     font-family: var(--font-main);
     animation: fadeIn 0.3s ease-out; 
@@ -374,7 +398,7 @@ button:hover {
     font-size: 1.1em;
     line-height: 1.6;
     margin: 15px 0;
-    color: #a0a0ff; /* Azul suave para el texto */
+    color: #a0a0ff; 
     text-shadow: 0 0 1px #a0a0ff;
 }
 
@@ -401,5 +425,9 @@ button:hover {
     #hud {
         font-size: 12px;
         padding: 5px 10px;
+    }
+    #menu-mute-button {
+        bottom: 10px;
+        right: 10px;
     }
 }

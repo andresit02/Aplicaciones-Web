@@ -22,6 +22,8 @@
                 <h1 class="game-title">SPACE WAR</h1>
                 <button onclick="game.startLoading()">Iniciar Juego</button>
                 <button onclick="game.showControls()">Controles</button>
+                
+                <button id="menu-mute-button" onclick="game.toggleMute('menu')">🔊</button>
             </div>
 
             <div id="controls-popup" class="gamelayer controls-overlay">
@@ -50,9 +52,11 @@
                 <div id="hud" class="gameoverlay">
                     <span id="score">SCORE: 0</span> | <span id="life">LIFE: 100</span>
                     
-                    <button id="pause-button" onclick="game.pauseGame()">||</button> 
-                    
-                    <button id="mute-button" onclick="game.toggleMute()">🔇</button>
+                    <div id="hud-buttons"> 
+                        <button id="pause-button" onclick="game.pauseGame()">||</button> 
+                        
+                        <button id="game-mute-button" onclick="game.toggleMute('game')">🔊</button>
+                    </div>
                 </div>
                 
                 <div id="pausescreen" class="pauseoverlay"> 

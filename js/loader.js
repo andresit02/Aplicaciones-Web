@@ -3,16 +3,26 @@ const loader = {
     loadedCount: 0,
     totalCount: 0,
     onload: null, 
-    audioContext: null, // NUEVO: Contexto de audio
+    audioContext: null,
+    
+    // ⭐️ NUEVO: Control de Mute
+    isMuted: false, 
+    masterGainNode: null, 
 
     init() {
         this.loadedCount = 0;
         this.totalCount = 0;
         this.resources = {};
-        // NUEVO: Inicializar AudioContext si no existe
         if (!this.audioContext) {
-            // Se usa window.AudioContext o window.webkitAudioContext (para compatibilidad)
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // ⭐️ Inicializar el GainNode Maestro
+        if (!this.masterGainNode) {
+            this.masterGainNode = this.audioContext.createGain();
+            this.masterGainNode.connect(this.audioContext.destination);
+            // El volumen inicial es 1.0 (no silenciado)
+            this.masterGainNode.gain.value = 1.0; 
         }
     },
 
@@ -45,17 +55,15 @@ const loader = {
     },
 
     /**
-     * NUEVO: Carga un archivo de audio como un ArrayBuffer y lo decodifica.
+     * Carga un archivo de audio como un ArrayBuffer y lo decodifica.
      * @param {string} url - Ruta del archivo de audio.
      * @returns {Promise<AudioBuffer>} El buffer de audio decodificado.
      */
     loadAudio(url) {
         this.totalCount++;
         
-        // Se usa fetch para obtener el archivo de audio como un ArrayBuffer
         return fetch(url)
             .then(response => response.arrayBuffer())
-            // Se decodifica el ArrayBuffer a un AudioBuffer
             .then(buffer => this.audioContext.decodeAudioData(buffer))
             .then(audioBuffer => {
                 this.loadedCount++;
@@ -70,7 +78,6 @@ const loader = {
                 if (this.loadedCount === this.totalCount && this.onload) {
                     this.onload();
                 }
-                // Retorna null o un buffer vacío para no detener la carga del juego
                 return null;
             });
     }
@@ -85,21 +92,21 @@ const loader = {
  * @returns {AudioBufferSourceNode} El nodo de fuente de audio, útil para detener música en bucle.
  */
 function playSound(buffer, loop = false, volume = 1.0) {
-    if (!loader.audioContext || !buffer) return;
+    // CRÍTICO: Si no hay buffer o el contexto de audio no está corriendo, salir.
+    if (!loader.audioContext || !buffer || loader.audioContext.state !== 'running') return;
 
-    // Crea un nuevo nodo de fuente (AudioBufferSourceNode)
     const source = loader.audioContext.createBufferSource();
     source.buffer = buffer;
     source.loop = loop;
     
-    // Configuración de volumen (GainNode)
+    // Configuración de volumen (GainNode local)
     const gainNode = loader.audioContext.createGain();
-    gainNode.gain.value = volume;
+    gainNode.gain.value = volume; 
 
-    // Conecta los nodos: Source -> Gain -> Destination (altavoces)
+    // ⭐️ Conexión: Source -> Gain Local -> Gain Maestro
     source.connect(gainNode);
-    gainNode.connect(loader.audioContext.destination);
+    gainNode.connect(loader.masterGainNode);
 
-    source.start(0); // Comienza la reproducción inmediatamente
-    return source; // Retorna el source para permitir control externo (detener música)
+    source.start(0); 
+    return source;
 }
