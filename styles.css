@@ -92,9 +92,8 @@ body {
 .game-title {
     font-family: var(--font-main); 
     font-size: 4em; 
-    /* ⭐️ CAMBIO DE COLOR BASE A CIAN ELÉCTRICO */
-    color: #e24392d0; 
-    /* ⭐️ ACTUALIZAR SOMBRAS AL NUEVO COLOR BASE */
+    /* COLOR CIAN NEÓN PARA EL TÍTULO */
+    color: #55e9ff; 
     text-shadow: 
         0 0 10px #55e9ff, 
         0 0 20px rgba(85, 233, 255, 0.8), 
@@ -115,7 +114,7 @@ body {
     100% { transform: translate(0); opacity: 1; }
 }
 
-/* Estilos de Botones Generales */
+/* Estilos de Botones Generales (Para Iniciar Juego) */
 button {
     font-family: var(--font-main); 
     font-size: 1.5em; 
@@ -330,6 +329,14 @@ button:hover {
     color: var(--color-secondary);
     text-shadow: 0 0 3px var(--color-secondary);
 }
+
+/* Estilo para el contador de FPS */
+#fps-counter {
+    padding: 0 5px;
+    color: var(--color-primary);
+    text-shadow: 0 0 3px var(--color-primary);
+}
+
 
 /* Contenedor para alinear los botones del HUD */
 #hud-buttons {

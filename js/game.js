@@ -1,8 +1,12 @@
-// game.js (CÓDIGO CORREGIDO PARA MUTE Y RÉCORDS)
+// game.js (CÓDIGO COMPLETO Y FINAL - 60 FPS Optimized)
 
 // Variables para el control de tiempo y entrada
 let lastUpdateTime = Date.now();
-// ⭐️ NUEVO: Variable para almacenar la puntuación más alta (persistencia con localStorage)
+// Variables para el cálculo de FPS
+let fpsMeter = 0; // Valor actual de FPS
+let frameCount = 0;
+let lastFPSTime = Date.now();
+// Variable para almacenar la puntuación más alta (persistencia con localStorage)
 let highScore = parseInt(localStorage.getItem('spaceWarHighScore') || 0); 
 let input = { left: false, right: false, fire: false }; // Control de entrada (teclado/ratón/táctil)
 let assets = { // Contenedor de recursos cargados
@@ -25,7 +29,7 @@ let gameEntities = new Map(); // Mapa de cuerpos físicos: Body -> UserData. Man
 
 // Variables para la lógica de oleadas/spawn (simplificadas)
 let spawnTimer = 0;
-const spawnInterval = 1000; // Intervalo base: Un enemigo cada 1000ms (1 segundo)
+const spawnInterval = 500; // Intervalo base: Un enemigo cada 1000ms (1 segundo)
 
 const game = {  
     // Propiedades del juego
@@ -34,8 +38,7 @@ const game = {
     scale: 1, 
     state: 'menu',
     animationFrameId: null, // ID para requestAnimationFrame (Draw loop)
-    logicInterval: null, // ID para setInterval (Logic loop)
-    animationTime: 50, // 20 FPS para la lógica (1000ms / 20 = 50ms)
+    // Se elimina logicInterval y animationTime.
     
     // NUEVO: Referencia al nodo de la música del menú para poder detenerla
     currentMusicNode: null, 
@@ -195,7 +198,7 @@ const game = {
         document.getElementById('pausescreen').style.display = (newState === 'paused') ? 'flex' : 'none';
 
         document.getElementById('controls-popup').style.display = 'none'; 
-        // ⭐️ OCULTAR PANTALLA DE RÉCORDS
+        // Ocultar Pantalla de Récords
         document.getElementById('records-popup').style.display = 'none'; 
 
         // NUEVA LÓGICA DE AUDIO
@@ -204,7 +207,7 @@ const game = {
             this.currentMusicNode = null;
         }
         
-        // ⭐️ CONTROL DE BOTONES DE MUTE
+        // CONTROL DE BOTONES DE MUTE
         const menuMuteButton = document.getElementById('menu-mute-button');
         const gameMuteButton = document.getElementById('game-mute-button');
 
@@ -367,97 +370,24 @@ const game = {
     // GAME LOOP Y FÍSICA
     // **********************************************
 
-    // Inicia bucles
+    // Inicia bucles (Solo requestAnimationFrame)
     startLoop() {
-        if (this.logicInterval) return; 
+        if (this.animationFrameId) return; 
         
-        // Bucle de lógica (Control de juego y física)
-        this.logicInterval = setInterval(this.logicLoop.bind(this), this.animationTime);
-        // Bucle de dibujo (Renderizado)
+        // Bucle de dibujo/lógica unificado
+        lastUpdateTime = Date.now(); // Resetear tiempo de actualización
+        lastFPSTime = Date.now();    // Resetear tiempo de FPS
         this.animationFrameId = requestAnimationFrame(this.drawLoop.bind(this));
     },
 
     // Detiene bucles
     stopLoop() {
-        clearInterval(this.logicInterval);
-        this.logicInterval = null;
         cancelAnimationFrame(this.animationFrameId);
         this.animationFrameId = null;
     },
-
-    // Llama a la lógica principal (20 veces/segundo)
-    logicLoop() {
-        if (this.state !== 'playing' || !this.player.body) return;
-
-        const now = Date.now();
-        let timeStep = (now - lastUpdateTime) / 1000;
-        lastUpdateTime = now;
-        
-        // Limitar el timeStep (anti-lag spike)
-        if (timeStep > (1/10)) { 
-            timeStep = 1/10;
-        }
-
-        // 1. LÓGICA DE DIFICULTAD PROGRESIVA
-        this.timeElapsed += timeStep * 1000;
-        
-        if (this.timeElapsed >= this.difficultyIncreaseTime) {
-            // Incrementar el factor de dificultad (velocidad y frecuencia) en 15%
-            this.difficultyFactor += this.difficultyIncreaseRate;
-            // Restar el intervalo para garantizar que el progreso sea constante
-            this.timeElapsed -= this.difficultyIncreaseTime; 
-        }
-
-
-        // 2. Control de Aparición de Enemigos
-        spawnTimer += game.animationTime;
-
-        // Reducir el intervalo de spawn con el tiempo
-        const currentSpawnInterval = Math.max(200, spawnInterval / this.difficultyFactor); 
-
-        if (spawnTimer >= currentSpawnInterval) {
-            this.spawnEnemy();
-            spawnTimer = 0;
-        }
-
-
-        // 3. Movimiento del Jugador
-        let vx = 0;
-        const speedMeters = physics.pixelsToMeters(this.player.speed);
-
-        if (input.left) vx -= speedMeters;
-        if (input.right) vx += speedMeters;
-
-        this.player.body.SetLinearVelocity(new b2Vec2(vx, 0));
-
-        // Aplicar límites de pantalla
-        const playerPos = this.player.body.GetPosition();
-        const playerXPixels = physics.metersToPixels(playerPos.x);
-        const minX = this.player.radius;
-        const maxX = this.canvas.width - this.player.radius;
-
-        // Límite Izquierdo y Derecho
-        if (playerXPixels < minX) {
-            this.player.body.SetPosition(new b2Vec2(physics.pixelsToMeters(minX), playerPos.y));
-            this.player.body.SetLinearVelocity(new b2Vec2(0, 0));
-        } else if (playerXPixels > maxX) {
-            this.player.body.SetPosition(new b2Vec2(physics.pixelsToMeters(maxX), playerPos.y));
-            this.player.body.SetLinearVelocity(new b2Vec2(0, 0));
-        }
-
-        // 4. Disparo
-        if (input.fire && now > this.player.lastShotTime) {
-            this.fireBullet();
-            this.player.lastShotTime = now + (1000 / this.player.fireRate);
-        }
-
-        // 5. Simulación de física
-        physics.step(timeStep);
-
-        // 6. Lógica de limpieza y estado (Al final del ciclo de física)
-        this.cleanUpEntities();
-        this.updateGameLogic();
-    },
+    
+    // Función lógica ELIMINADA y su contenido MOVIDO al drawLoop
+    /* logicLoop() { ... } */ 
 
     // **********************************************
     // MECÁNICAS DE JUEGO (SHOOTER)
@@ -580,7 +510,7 @@ const game = {
             playSound(assets.hitSound, false, 1.0);
         }
 
-        // La limpieza se realiza al final de logicLoop.
+        // La limpieza se realiza al final del drawLoop (antes logicLoop).
     },
 
     // Elimina entidades marcadas o fuera de pantalla
@@ -627,7 +557,7 @@ const game = {
     },
 
     // **********************************************
-    // DIBUJO Y VISUALIZACIÓN
+    // DIBUJO Y VISUALIZACIÓN (UNIFICADO CON LÓGICA)
     // **********************************************
 
     drawLoop() {
@@ -638,6 +568,92 @@ const game = {
         }
 
         const now = Date.now();
+        // CÁLCULO DE TIMESTEP PARA MOVIMIENTO BASADO EN EL TIEMPO
+        let timeStep = (now - lastUpdateTime) / 1000;
+        lastUpdateTime = now;
+        
+        // Limitar el timeStep (anti-lag spike)
+        if (timeStep > (1/10)) { 
+            timeStep = 1/10;
+        }
+
+        // ==============================================
+        //           LÓGICA DEL JUEGO (MOVIDA AQUÍ)
+        // ==============================================
+        if (this.state === 'playing' && this.player.body) {
+            
+            // 1. LÓGICA DE DIFICULTAD PROGRESIVA
+            this.timeElapsed += timeStep * 1000;
+            
+            if (this.timeElapsed >= this.difficultyIncreaseTime) {
+                this.difficultyFactor += this.difficultyIncreaseRate;
+                this.timeElapsed -= this.difficultyIncreaseTime; 
+            }
+
+
+            // 2. Control de Aparición de Enemigos
+            spawnTimer += timeStep * 1000; 
+
+            const currentSpawnInterval = Math.max(200, spawnInterval / this.difficultyFactor); 
+
+            if (spawnTimer >= currentSpawnInterval) {
+                this.spawnEnemy();
+                spawnTimer = spawnTimer % currentSpawnInterval; 
+            }
+
+
+            // 3. Movimiento del Jugador
+            let vx = 0;
+            const speedMeters = physics.pixelsToMeters(this.player.speed);
+
+            if (input.left) vx -= speedMeters;
+            if (input.right) vx += speedMeters;
+
+            this.player.body.SetLinearVelocity(new b2Vec2(vx, 0));
+
+            // Aplicar límites de pantalla
+            const playerPos = this.player.body.GetPosition();
+            const playerXPixels = physics.metersToPixels(playerPos.x);
+            const minX = this.player.radius;
+            const maxX = this.canvas.width - this.player.radius;
+
+            if (playerXPixels < minX) {
+                this.player.body.SetPosition(new b2Vec2(physics.pixelsToMeters(minX), playerPos.y));
+                this.player.body.SetLinearVelocity(new b2Vec2(0, 0));
+            } else if (playerXPixels > maxX) {
+                this.player.body.SetPosition(new b2Vec2(physics.pixelsToMeters(maxX), playerPos.y));
+                this.player.body.SetLinearVelocity(new b2Vec2(0, 0));
+            }
+
+            // 4. Disparo
+            if (input.fire && now > this.player.lastShotTime) {
+                this.fireBullet();
+                this.player.lastShotTime = now + (1000 / this.player.fireRate);
+            }
+
+            // 5. Simulación de física (usando el timeStep variable)
+            physics.step(timeStep);
+
+            // 6. Lógica de limpieza y estado
+            this.cleanUpEntities();
+            this.updateGameLogic();
+        } 
+        // ==============================================
+        //           FIN LÓGICA DEL JUEGO
+        // ==============================================
+
+
+        // LÓGICA DE CÁLCULO DE FPS
+        frameCount++;
+        const delta = now - lastFPSTime;
+        // Si ha pasado 1 segundo (1000ms), recalcular y resetear
+        if (delta >= 1000) {
+            fpsMeter = Math.round((frameCount * 1000) / delta);
+            frameCount = 0;
+            lastFPSTime = now;
+        }
+        // FIN LÓGICA DE CÁLCULO DE FPS
+
 
         // LÓGICA DE CAMBIO Y ESTADO DE PARPADEO DEL FONDO
         if (now - this.lastPatternChangeTime > this.patternChangeInterval) {
@@ -683,6 +699,7 @@ const game = {
         this.drawEntities();
         this.drawHUD();
         
+        // Llamada recursiva para el siguiente frame
         this.animationFrameId = requestAnimationFrame(this.drawLoop.bind(this));
     },
 
@@ -764,13 +781,15 @@ const game = {
     drawHUD() {
         document.getElementById('score').innerText = `SCORE: ${this.player.score}`;
         document.getElementById('life').innerText = `LIFE: ${this.player.userData.life}`;
+        // MOSTRAR VALOR DE FPS
+        document.getElementById('fps-counter').innerText = `FPS: ${fpsMeter}`;
     },
 
     // Lógica de estado y fin del juego (MODIFICADA para guardar el récord)
     updateGameLogic() {
         if (this.player.userData.life <= 0) {
             
-            // ⭐️ LÓGICA DE RÉCORDS: Comparar y guardar
+            // LÓGICA DE RÉCORDS: Comparar y guardar
             if (this.player.score > highScore) {
                 highScore = this.player.score;
                 localStorage.setItem('spaceWarHighScore', highScore);
@@ -829,7 +848,7 @@ const game = {
     },
     
     // **********************************************
-    // NUEVAS FUNCIONES DE CONTROLES Y RÉCORDS
+    // FUNCIONES DE PANELES (Controles y Récords)
     // **********************************************
     
     /**
@@ -849,7 +868,7 @@ const game = {
     },
 
     /**
-     * ⭐️ NUEVA FUNCIÓN: Muestra la ventana de récords.
+     * Muestra la ventana de récords.
      */
     showRecords: function() {
         if (this.state === 'menu') {
@@ -859,7 +878,7 @@ const game = {
     },
 
     /**
-     * ⭐️ NUEVA FUNCIÓN: Oculta la ventana de récords.
+     * Oculta la ventana de récords.
      */
     hideRecords: function() {
         document.getElementById("records-popup").style.display = 'none';
