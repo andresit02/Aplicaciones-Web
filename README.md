@@ -52,7 +52,7 @@ El proyecto cumple con los objetivos de la rúbrica y utiliza una arquitectura m
 
 ## 4. Repositorio y Créditos
 
-**Link al Repositorio Git:** https://github.com/andresit02/Aplicaciones-Web
+**Link al Repositorio Git:** **https://github.com/andresit02/Aplicaciones-Web**
 
 ---
 
