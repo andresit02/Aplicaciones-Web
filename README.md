@@ -31,22 +31,26 @@ El juego está diseñado para ser controlado mediante teclado y ratón en un ent
 
 ---
 
-## 3. Características Clave y Estructura
+## 3. Características Clave y Arquitectura (Análisis de Rúbrica)
 
-El proyecto cumple con los objetivos de la rúbrica y utiliza una arquitectura modular.
+El proyecto "SPACE WAR" fue desarrollado siguiendo una arquitectura modular para cumplir con los objetivos del bimestre.
 
-### ⚙️ Arquitectura Técnica
+### ⚙️ Arquitectura Técnica y Patrones
 
-* **Game Loop & Estados:** El juego utiliza una estructura de bucle principal optimizada para **60 FPS** (según el código `game.js`) y maneja tres estados principales: `menu`, `playing` y `gameover`.
-* **Motor de Física:** Integración de **Box2D.js** (versión minimizada) para manejar todas las colisiones de manera precisa entre la nave del jugador, enemigos y proyectiles, garantizando la estabilidad (archivo `physics.js`).
-* **Carga de Recursos (Loader):** Se utiliza un módulo `loader.js` para la precarga asíncrona de todas las imágenes y audios antes de iniciar el juego.
+* **Modularidad del Código:** El proyecto divide responsabilidades en módulos dedicados: `game.js` (Lógica principal/Estados), `physics.js` (Integración de Box2D), y `loader.js` (Gestión de Recursos/Audio).
+* **Game Loop y Estados:** Se implementa el ciclo de juego unificado (`drawLoop` en `game.js`) y se gestionan los estados requeridos: `menu`, `loading`, `playing`, `paused`, y `gameover`.
+* **Motor de Física (Box2D):** El archivo `physics.js` inicializa el mundo **Box2D.js** para manejar todas las colisiones y el movimiento con precisión, garantizando la estabilidad del juego.
 
 ### ✅ Requisitos Cumplidos
 
-* **Persistencia:** Utiliza `localStorage` para guardar el **High Score** (Récord de Puntuación) y lo muestra en el panel de Récords del menú. (Líneas 10 y 310 en `game.js`).
-* **Audio:** Implementación de la **Web Audio API** para manejar la reproducción, incluyendo música de menú y efectos de sonido (`shoot`, `hit`, `gameover`). El audio puede ser silenciado (`toggleMute`) globalmente desde el menú o el HUD, asegurando accesibilidad.
-* **Rendimiento:** El juego incluye un contador de FPS (`fps-counter` en el HUD) para verificar que el rendimiento se mantiene en el rango requerido de **≥45 FPS**.
-* **Contenido:** El juego posee un nivel cresciente de oleadas enemigas, cada determinado tiempo
+| Requisito de Rúbrica | Implementación en "SPACE WAR" | Cumplimiento |
+| :--- | :--- | :--- |
+| **Física/Colisiones** | Uso de **Box2D.js** para colisiones circulares, manejando la interacción entre la nave del jugador, las balas, y los 3 tipos de enemigos. | **CUMPLIDO** |
+| **Contenido/Mecánicas** | Implementación de **1 nivel con oleadas crecientes**. La dificultad sube mediante el **`difficultyFactor`** que aumenta la velocidad de los 3 tipos de enemigos y reduce el intervalo de spawn cada 4 segundos. | **CUMPLIDO** |
+| **Audio** | Uso de la **Web Audio API** (`loader.js`). Incluye música de menú y **tres efectos de sonido** (`shoot`, `hit`, `gameover`), superando el mínimo requerido. | **CUMPLIDO** |
+| **Rendimiento** | El bucle principal está optimizado para **$\geq 45$ FPS** (valor visible en el HUD con `fps-counter`), con manejo de `timeStep` para estabilidad física. | **CUMPLIDO** |
+| **Persistencia** | Se utiliza **`localStorage`** para guardar y mostrar el **High Score** (Récord de Puntuación) en el panel de Récords del menú. | **CUMPLIDO** |
+| **Accesibilidad** | La función **`toggleMute`** permite silenciar el audio globalmente desde el menú o el HUD, cumpliendo con el requisito de accesibilidad mínima. | **CUMPLIDO** |
 
 ---
 
@@ -56,8 +60,8 @@ El proyecto cumple con los objetivos de la rúbrica y utiliza una arquitectura m
 
 ---
 
-## 5. Build Jugable (ZIP)
+## 5. Build Jugable (ZIP) + Capturas & Video
 
-**Link al Archivo ZIP en la Nube:**
+**Link de los archivos en la Nube:**
 
 **https://epnecuador-my.sharepoint.com/:f:/g/personal/andres_fernandez01_epn_edu_ec/EhLTUoqxhjtHlZ2jZARWqfwBq_wRnLWL8ioUm5wayyOvQg?e=X4aifh**
