@@ -138,12 +138,12 @@ button:hover {
     border-color: var(--color-secondary); 
 }
 
-/* ⭐️ ESTILO ESPECÍFICO PARA EL BOTÓN DE MUTE EN EL MENÚ */
+/* ESTILO ESPECÍFICO PARA EL BOTÓN DE MUTE EN EL MENÚ */
 #menu-mute-button {
-    position: absolute; /* Para que quede en la esquina */
+    position: absolute; 
     bottom: 20px;
     right: 20px;
-    padding: 10px 15px; /* Más pequeño y discreto */
+    padding: 10px 15px; 
     font-size: 1.2em;
     border: 2px solid var(--color-secondary); 
     color: var(--color-secondary); 
@@ -319,10 +319,9 @@ button:hover {
     gap: 10px; /* Separación entre pausa y mute */
 }
 
-/* ⭐️ ESTILOS MEJORADOS para Botón de Pausa/Mute del JUEGO */
+/* ESTILOS MEJORADOS para Botón de Pausa/Mute del JUEGO */
 
 #pause-button, #game-mute-button {
-    /* ⭐️ APLICAMOS ESTILOS DE BOTÓN NEÓN MÁS FUERTES Y VISIBLES */
     font-size: 1.1em;
     padding: 8px 12px;
     margin: 0;
@@ -334,7 +333,7 @@ button:hover {
     transition: all 0.2s; 
     text-transform: none; 
     box-shadow: 0 0 5px var(--color-primary); 
-    line-height: 1; /* Para centrar el texto mejor */
+    line-height: 1; 
 }
 
 #pause-button:hover, #game-mute-button:hover {
@@ -354,9 +353,9 @@ button:hover {
     text-shadow: 0 0 5px var(--color-primary);
 }
 
-/* ⭐️ 11. VENTANA EMERGENTE DE CONTROLES */
+/* ⭐️ 11. VENTANA EMERGENTE DE CONTROLES y RÉCORDS */
 
-/* Capa de superposición para los controles (oculta por defecto, se muestra con JS) */
+/* Capa de superposición para los controles/récords */
 .controls-overlay {
     background: rgba(10, 10, 32, 0.98); 
     display: none; 
@@ -379,6 +378,27 @@ button:hover {
     font-family: var(--font-main);
     animation: fadeIn 0.3s ease-out; 
 }
+
+/* ⭐️ Estilo específico para la ventana de Récords */
+#records-popup #controls-panel {
+    border: 3px solid var(--color-primary); 
+    box-shadow: 0 0 15px var(--color-primary), 0 0 30px rgba(0, 224, 255, 0.6);
+}
+
+#records-popup h3 {
+    color: var(--color-secondary); 
+    text-shadow: 0 0 8px var(--color-secondary);
+}
+
+/* ⭐️ ESTILO PARA EL TEXTO GRANDE DEL RÉCORD */
+#high-score-display {
+    font-size: 3.5em; 
+    color: var(--color-secondary); 
+    text-shadow: 0 0 10px var(--color-secondary);
+    margin: 20px 0;
+    font-weight: 700;
+}
+
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }

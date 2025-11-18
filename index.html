@@ -22,10 +22,18 @@
                 <h1 class="game-title">SPACE WAR</h1>
                 <button onclick="game.startLoading()">Iniciar Juego</button>
                 <button onclick="game.showControls()">Controles</button>
-                
+                <button onclick="game.showRecords()">Récords</button>
                 <button id="menu-mute-button" onclick="game.toggleMute('menu')">🔊</button>
             </div>
 
+            <div id="records-popup" class="gamelayer controls-overlay">
+                <div id="controls-panel">
+                    <h3>🎖️ Máximo Récord 🎖️</h3>
+                    <p id="high-score-display">0</p>
+                    <button onclick="game.hideRecords()">CERRAR</button>
+                </div>
+            </div>
+            
             <div id="controls-popup" class="gamelayer controls-overlay">
                 <div id="controls-panel">
                     <h3>🚀 Controles de Nave 🚀</h3>
